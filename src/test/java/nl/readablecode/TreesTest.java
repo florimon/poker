@@ -1,5 +1,6 @@
 package nl.readablecode;
 
+import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -41,17 +42,17 @@ public class TreesTest {
                                                     el(3, el(33, el(331), el(332)))));
 
         List<Integer> integers = new ArrayList<>();
-        breadthFirst2(list, MyClass::getChildren, myclass -> !integers.add(myclass.i));
+        breadthFirst(list, MyClass::getChildren, myclass -> !integers.add(myclass.i));
         System.out.println(integers);
 
-        MyClass myClass1 = breadthFirst2(list, MyClass::getChildren, myClass -> myClass.ann);
+        MyClass myClass1 = breadthFirst(list, MyClass::getChildren, myClass -> myClass.ann);
         System.out.println(myClass1);
 
         List<Integer> integers2 = new ArrayList<>();
-        depthFirst2(list, MyClass::getChildren, myclass -> !integers2.add(myclass.i));
+        depthFirst(list, MyClass::getChildren, myclass -> !integers2.add(myclass.i));
         System.out.println(integers2);
 
-        MyClass myClass2 = depthFirst2(list, MyClass::getChildren, myClass -> myClass.ann);
+        MyClass myClass2 = depthFirst(list, MyClass::getChildren, myClass -> myClass.ann);
         System.out.println(myClass2);
 
     }
@@ -75,8 +76,26 @@ public class TreesTest {
                 findFirst(interfaces, i -> getInterfaceAnnotations(i.getInterfaces(), annotation)).orElse(null));
     }
 
+    private <T> T depthFirst2(Collection<T> roots, Traverser<T> traverser, UnaryOperator<T> visitor) {
+        return findFirst(roots, r -> depthFirst2(r, traverser, visitor)).orElse(null);
+    }
+
+    private <T> T depthFirst2(T root, Traverser<T> traverser, UnaryOperator<T> visitor) {
+        return ofNullable(visitor.apply(root)).orElseGet(() ->
+                    depthFirst2(traverser.apply(root), traverser, visitor));
+    }
+
+    private <T> T breadthFirst2(Collection<T> roots, Traverser<T> traverser, UnaryOperator<T> visitor) {
+        return findFirst(roots, visitor).orElseGet(() ->
+                findFirst(roots, r -> breadthFirst2(traverser.apply(r), traverser, visitor)).orElse(null));
+    }
+
     private <T,V> Optional<V> findFirst(T[] array, Function<T,V> function) {
         return stream(array).map(function).filter(Objects::nonNull).findFirst();
+    }
+
+    private <T,V> Optional<V> findFirst(Collection<T> coll, Function<T,V> function) {
+        return coll.stream().map(function).filter(Objects::nonNull).findFirst();
     }
 
     interface Traverser<T> extends Function<T, Collection<T>> {}
@@ -87,20 +106,6 @@ public class TreesTest {
                 .filter(Objects::nonNull).filter(visitor).findFirst().orElse(null);
     }
 
-    private <T> T depthFirst2(Collection<T> list, Traverser<T> traverser, Predicate<T> visitor) {
-        for (T el : list) {
-            if (visitor.test(el)) {
-                return el;
-            } else {
-                T t = depthFirst2(traverser.apply(el), traverser, visitor);
-                if (t != null) {
-                    return t;
-                }
-            }
-        }
-        return null;
-    }
-
     private <T> T breadthFirst(Collection<T> list, Traverser<T> traverser, Predicate<T> visitor) {
         return list.stream()
                 .filter(visitor)
@@ -108,20 +113,4 @@ public class TreesTest {
                                                  .map(l -> breadthFirst(traverser.apply(l), traverser, visitor))
                                                  .filter(Objects::nonNull).filter(visitor).findFirst().orElse(null));
     }
-
-    private <T> T breadthFirst2(Collection<T> list, Traverser<T> traverser, Predicate<T> visitor) {
-        for (T el : list) {
-            if (visitor.test(el)) {
-                return el;
-            }
-        }
-        for (T el : list) {
-            T t = breadthFirst2(traverser.apply(el), traverser, visitor);
-            if (t != null) {
-                return t;
-            }
-        }
-        return null;
-    }
-
 }
