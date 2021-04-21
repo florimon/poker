@@ -76,20 +76,6 @@ public class TreesTest {
                 findFirst(interfaces, i -> getInterfaceAnnotations(i.getInterfaces(), annotation)).orElse(null));
     }
 
-    private <T> T depthFirst2(Collection<T> roots, Traverser<T> traverser, UnaryOperator<T> visitor) {
-        return findFirst(roots, r -> depthFirst2(r, traverser, visitor)).orElse(null);
-    }
-
-    private <T> T depthFirst2(T root, Traverser<T> traverser, UnaryOperator<T> visitor) {
-        return ofNullable(visitor.apply(root)).orElseGet(() ->
-                    depthFirst2(traverser.apply(root), traverser, visitor));
-    }
-
-    private <T> T breadthFirst2(Collection<T> roots, Traverser<T> traverser, UnaryOperator<T> visitor) {
-        return findFirst(roots, visitor).orElseGet(() ->
-                findFirst(roots, r -> breadthFirst2(traverser.apply(r), traverser, visitor)).orElse(null));
-    }
-
     private <T,V> Optional<V> findFirst(T[] array, Function<T,V> function) {
         return stream(array).map(function).filter(Objects::nonNull).findFirst();
     }

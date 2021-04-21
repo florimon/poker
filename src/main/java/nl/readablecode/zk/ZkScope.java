@@ -24,7 +24,7 @@ import static java.util.Optional.ofNullable;
  * @author florimon
  */
 @RequiredArgsConstructor
-public class ZkScope<T> implements Scope {
+class ZkScope<T> implements Scope {
 
     interface AttributeGetter<T> {
         Object get(T t, String name);
@@ -68,7 +68,7 @@ public class ZkScope<T> implements Scope {
     }
 
     @Override
-    public void registerDestructionCallback(String name, Runnable callback) {
+    public void registerDestructionCallback(String name, Runnable callback) { // no implementation.
     }
 
     @Override

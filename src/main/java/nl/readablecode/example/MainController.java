@@ -1,12 +1,11 @@
 package nl.readablecode.example;
 
 import lombok.extern.slf4j.Slf4j;
-import nl.readablecode.zk.ZkPageScope;
-import org.springframework.context.annotation.Scope;
+import nl.readablecode.zk.PageMapping;
+import nl.readablecode.zk.PageScope;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
 import org.zkoss.zk.ui.Desktop;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
@@ -21,8 +20,8 @@ import java.util.UUID;
 @EnableScheduling
 @Slf4j
 @Component
-@ZkPageScope
-public class MainController {
+@PageScope
+public class MainController implements MainInterface {
 
     Window window = new Window("MainController Test", "normal", false);
     Label label = new Label();
@@ -31,7 +30,9 @@ public class MainController {
     Desktop desktop;
     String id;
 
+    @PageMapping("/service")
     public void service(Page page) {
+        Executions.getCurrent().getParameterMap().forEach((string, object) -> log.info("{} = {}", string, object));
         desktop = page.getDesktop();
         enableServerPush(desktop);
         id = page.getDesktop().getId();
@@ -47,11 +48,11 @@ public class MainController {
 
     @Scheduled(fixedRate = 2000)
     public void update() {
-        log.info("In update");
-        Executions.schedule(desktop, event -> label.setValue(id + " " +
-                UUID.randomUUID().toString().substring(0, 8)), null);
+        if (desktop != null) {
+            Executions.schedule(desktop, event -> label.setValue(id + " " +
+                    UUID.randomUUID().toString().substring(0, 8)), null);
+        }
     }
-
 
     private void enableServerPush(Desktop desktop) {
         ((DesktopCtrl) desktop).enableServerPush(new org.zkoss.zk.ui.impl.PollingServerPush(-1,-1,-1));

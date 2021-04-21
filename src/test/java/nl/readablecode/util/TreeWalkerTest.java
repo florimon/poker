@@ -24,7 +24,7 @@ public class TreeWalkerTest {
     public void shouldCollectAllNodesInCorrectOrderWhenWalkingDepthFirstAndVisitorAlwaysReturnsFalse() {
         List<Integer> ids = new ArrayList<>();
         TreeWalker<Node> treeWalker = new TreeWalker<>(Node::getChildren, node -> !ids.add(node.id));
-        Node candidate = treeWalker.depthFirst(nodes);
+        Node candidate = treeWalker.depthFirst2(nodes);
         assertNull(candidate);
         assertEquals(asList(1, 11, 111, 112, 12, 2, 22, 221, 222, 3, 33, 331, 332), ids);
     }
@@ -33,7 +33,7 @@ public class TreeWalkerTest {
     public void shouldCollectSomeNodesInCorrectOrderWhenWalkingDepthFirstAndVisitorReturnsTrueForSomeNode() {
         List<Integer> ids = new ArrayList<>();
         TreeWalker<Node> treeWalker = new TreeWalker<>(Node::getChildren, node -> ids.add(node.id) && node.id == 2);
-        Node candidate = treeWalker.depthFirst(nodes);
+        Node candidate = treeWalker.depthFirst2(nodes);
         assertEquals(2, candidate.id);
         assertEquals(asList(1, 11, 111, 112, 12, 2), ids);
     }
@@ -42,7 +42,7 @@ public class TreeWalkerTest {
     public void shouldCollectAllNodesInCorrectOrderWhenWalkingBreadthFirstAndVisitorAlwaysReturnsFalse() {
         List<Integer> ids = new ArrayList<>();
         TreeWalker<Node> treeWalker = new TreeWalker<>(Node::getChildren, node -> !ids.add(node.id));
-        Node candidate = treeWalker.breadthFirst(nodes);
+        Node candidate = treeWalker.breadthFirst2(nodes);
         assertNull(candidate);
         assertEquals(asList(1, 2, 3, 11, 12, 111, 112, 22, 221, 222, 33, 331, 332), ids);
     }
@@ -51,7 +51,7 @@ public class TreeWalkerTest {
     public void shouldCollectSomeNodesInCorrectOrderWhenWalkingBreadthFirstAndVisitorReturnsTrueForSomeNode() {
         List<Integer> ids = new ArrayList<>();
         TreeWalker<Node> treeWalker = new TreeWalker<>(Node::getChildren, node -> ids.add(node.id) && node.id == 2);
-        Node candidate = treeWalker.breadthFirst(nodes);
+        Node candidate = treeWalker.breadthFirst2(nodes);
         assertEquals(2, candidate.id);
         assertEquals(asList(1, 2), ids);
     }
