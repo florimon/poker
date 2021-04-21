@@ -6,20 +6,14 @@ import lombok.ToString;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
+import static nl.readablecode.TreesTest.MyClass.al;
 import static nl.readablecode.TreesTest.MyClass.el;
 
 public class TreesTest {
@@ -30,24 +24,36 @@ public class TreesTest {
     static class MyClass {
         final int i;
         final List<MyClass> children;
+        final boolean ann;
 
         static MyClass el(int i, MyClass... children) {
-            return new MyClass(i, new ArrayList<>(Arrays.asList(children)));
+            return new MyClass(i, new ArrayList<>(Arrays.asList(children)), false);
+        }
+
+        static MyClass al(int i, MyClass... children) {
+            return new MyClass(i, new ArrayList<>(Arrays.asList(children)), true);
         }
     }
 
     @Test
     public void testIt() {
-        List<MyClass> list = new ArrayList<>(asList(el(1, el(11)), el(2, el(22)), el(3, el(33))));
-        System.out.println(flattenBreadthFirst(list, MyClass::getChildren));
-        System.out.println(flattenDepthFirst(list, MyClass::getChildren));
+        List<MyClass> list = new ArrayList<>(asList(el(1, el(11, el(111), el(112)), al(12)), al(2, el(22, el(221), el(222))),
+                                                    el(3, el(33, el(331), el(332)))));
 
         List<Integer> integers = new ArrayList<>();
-        breadthFirst(list, MyClass::getChildren, myclass -> !integers.add(myclass.i));
+        breadthFirst2(list, MyClass::getChildren, myclass -> !integers.add(myclass.i));
         System.out.println(integers);
 
-        MyClass myClass1 = breadthFirst(list, MyClass::getChildren, myClass -> myClass.i == 22);
+        MyClass myClass1 = breadthFirst2(list, MyClass::getChildren, myClass -> myClass.ann);
         System.out.println(myClass1);
+
+        List<Integer> integers2 = new ArrayList<>();
+        depthFirst2(list, MyClass::getChildren, myclass -> !integers2.add(myclass.i));
+        System.out.println(integers2);
+
+        MyClass myClass2 = depthFirst2(list, MyClass::getChildren, myClass -> myClass.ann);
+        System.out.println(myClass2);
+
     }
 
     // class depth first, interfaces breadth first
@@ -75,36 +81,47 @@ public class TreesTest {
 
     interface Traverser<T> extends Function<T, Collection<T>> {}
 
-    private <T> List<T> flattenBreadthFirst(Collection<T> list, Traverser<T> traverser) {
-        return combine(list,
-                list.stream().flatMap(l -> flattenBreadthFirst(traverser.apply(l), traverser).stream()).collect(toList()));
+    private <T> T depthFirst(Collection<T> list, Traverser<T> traverser, Predicate<T> visitor) {
+        return list.stream()
+                .map(l -> ofNullable(l).filter(visitor).orElseGet(() -> depthFirst(traverser.apply(l), traverser, visitor)))
+                .filter(Objects::nonNull).filter(visitor).findFirst().orElse(null);
     }
 
-    private <T> List<T> flattenDepthFirst(Collection<T> list, Traverser<T> traverser) {
-        return list.stream().flatMap(l -> prepend(l, flattenDepthFirst(traverser.apply(l), traverser)).stream()).collect(toList());
+    private <T> T depthFirst2(Collection<T> list, Traverser<T> traverser, Predicate<T> visitor) {
+        for (T el : list) {
+            if (visitor.test(el)) {
+                return el;
+            } else {
+                T t = depthFirst2(traverser.apply(el), traverser, visitor);
+                if (t != null) {
+                    return t;
+                }
+            }
+        }
+        return null;
     }
-
-    private <T> List<T> prepend(T head, Collection<T> collection) {
-        ArrayList<T> result = new ArrayList<>();
-        result.add(head);
-        result.addAll(collection);
-        return result;
-    }
-
-    private <T> List<T> combine(Collection<T> collection1, Collection<T> collection2) {
-        ArrayList<T> result = new ArrayList<>();
-        result.addAll(collection1);
-        result.addAll(collection2);
-        return result;
-    }
-
-//    private <T> T depthFirst(List<T> list, Traverser<T> traverser, Predicate<T> visitor) {
-//        list.stream().filter(visitor).findFirst()
-//    }
 
     private <T> T breadthFirst(Collection<T> list, Traverser<T> traverser, Predicate<T> visitor) {
-        return list.stream().filter(visitor).findFirst().orElseGet(() ->
-            list.stream().map(l -> breadthFirst(traverser.apply(l), traverser, visitor)).filter(Objects::nonNull).filter(visitor).findFirst()
-                .orElse(null));
+        return list.stream()
+                .filter(visitor)
+                .findFirst().orElseGet(() -> list.stream()
+                                                 .map(l -> breadthFirst(traverser.apply(l), traverser, visitor))
+                                                 .filter(Objects::nonNull).filter(visitor).findFirst().orElse(null));
     }
+
+    private <T> T breadthFirst2(Collection<T> list, Traverser<T> traverser, Predicate<T> visitor) {
+        for (T el : list) {
+            if (visitor.test(el)) {
+                return el;
+            }
+        }
+        for (T el : list) {
+            T t = breadthFirst2(traverser.apply(el), traverser, visitor);
+            if (t != null) {
+                return t;
+            }
+        }
+        return null;
+    }
+
 }
