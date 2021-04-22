@@ -1,6 +1,7 @@
-package nl.readablecode.util;
+package nl.readablecode.zk;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 import lombok.Getter;
@@ -32,19 +33,12 @@ public class PageMethod {
         return asList(path.split( "/"));
     }
 
-    private static String normalize(String string) {
-        return string.replace("//", "/").replaceFirst("^([^/]?)", "/$1").replaceFirst("(.)/$", "$1");
+    static String normalize(String s) {
+        return s.replace("//", "/").replaceFirst("^$", "/").replaceFirst("^([^/])", "/$1").replaceFirst("(.)/$", "$1");
     }
 
     public boolean matches(String requestPath) {
         return matches(split(normalize(requestPath)));
-    }
-
-    public void invoke(Object instance, String requestPath, Page page) {
-        Map<String, String> values = getValuesByPathVariableName(split(normalize(requestPath)));
-        Map<Integer, String> names = getPathVariableNamesByParameterIndex();
-        Map<Integer, String> valuesByIndex = names.entrySet().stream().map(e -> Pair.of(e.getKey(), values.get(e.getValue())))
-            .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }
 
     private boolean matches(List<String> requestPathElements) {
@@ -54,6 +48,24 @@ public class PageMethod {
             Iterator<String> iterator = requestPathElements.iterator();
             return pathElements.stream().allMatch(e -> e.equals(iterator.next()) || isPathVariable(e));
         }
+    }
+
+    public void invoke(Object instance, String requestPath, Page page)
+        throws InvocationTargetException, IllegalAccessException {
+        Map<String, String> values = getValuesByPathVariableName(split(normalize(requestPath)));
+        Map<Integer, String> names = getPathVariableNamesByParameterIndex();
+        Map<Integer, String> valuesByIndex = getValuesByParameterIndex(values, names);
+        Class<?>[] types = method.getParameterTypes();
+        Object[] args = IntStream.range(0, method.getParameterCount())
+                            .mapToObj(index -> types[index].equals(Page.class) ? page : valuesByIndex.get(index))
+                            .collect(Collectors.toList()).toArray(new Object[0]);
+        method.invoke(instance, args);
+    }
+
+    private Map<Integer, String> getValuesByParameterIndex(Map<String, String> values, Map<Integer, String> names) {
+        return names.entrySet().stream().map(e -> Pair.of(e.getKey(), values.get(e.getValue())))
+                                        .filter(pair -> pair.getValue() != null)
+                                        .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }
 
     public Map<String, String> getValuesByPathVariableName(List<String> requestPathElements) {

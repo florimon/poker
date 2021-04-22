@@ -19,6 +19,7 @@
 		<zk.version>9.5.0.3</zk.version>
 		<lombok.version>1.18.20</lombok.version>
 		<commons-lang.version>3.11</commons-lang.version>
+		<mockito.version>3.4.4</mockito.version>
 
 		<resource.delimiter>@</resource.delimiter>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -106,11 +107,18 @@
 			<artifactId>misc-utils</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
 
     </dependencies>
 
