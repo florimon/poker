@@ -33,7 +33,7 @@ public class PageMethod {
     }
 
     private static String normalize(String string) {
-        return string.replaceAll("//", "/").replaceAll("^([^/]?)", "/$1").replaceFirst("(.)/$", "$1");
+        return string.replace("//", "/").replaceFirst("^([^/]?)", "/$1").replaceFirst("(.)/$", "$1");
     }
 
     public boolean matches(String requestPath) {
@@ -73,7 +73,7 @@ public class PageMethod {
 
     private <A extends Annotation> A findAnnotation(Annotation[] annotations, Class<A> annotationClass) {
         return Arrays.stream(annotations).filter(a -> annotationClass.isAssignableFrom(a.getClass()))
-                                         .findFirst().map(a -> annotationClass.cast(a)).orElse(null);
+                                         .findFirst().map(annotationClass::cast).orElse(null);
     }
 
     private boolean isPathVariable(String pathElement) {
