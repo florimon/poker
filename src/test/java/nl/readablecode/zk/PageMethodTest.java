@@ -33,30 +33,34 @@ public class PageMethodTest {
 
     @Test
     public void invokeShouldInvokeMethodWithRightArguments() throws Exception {
-        PageMethod pageMethod = new PageMethod(getServiceMethod(), of("prefix"), "{first}/middle/{last}");
+        PageMethod pageMethod = new PageMethod(getServiceMethod(), of("prefix"), "{long}/{string}/{boolean}");
         TestClass testInstance = new TestClass();
         Page page = Mockito.mock(Page.class);
-        pageMethod.invoke(testInstance, "/prefix/123/middle/456", page);
-        assertEquals("123", testInstance.first);
+        pageMethod.invoke(testInstance, "/prefix/123/middle/true", page);
         assertEquals(page, testInstance.page);
-        assertEquals("456", testInstance.last);
+        assertEquals(123L, (long) testInstance.longVar);
+        assertEquals("middle", testInstance.stringVar);
+        assertEquals(true, testInstance.booleanVar);
     }
 
     private Method getServiceMethod() throws NoSuchMethodException {
-        return TestClass.class.getMethod("service", String.class, Page.class, String.class);
+        return TestClass.class.getMethod("service", Long.class, Page.class, Boolean.class, String.class);
     }
 
     static class TestClass {
-        String first;
+        Long longVar;
         Page page;
-        String last;
+        Boolean booleanVar;
+        String stringVar;
 
-        public void service(@PathVariable("first") String first,
-                     Page page,
-                     @PathVariable("last") String last) {
-            this.first = first;
+        public void service( @PathVariable("long") Long longVar,
+                             Page page,
+                             @PathVariable("boolean") Boolean booleanVar,
+                             @PathVariable("string") String stringVar) {
+            this.longVar = longVar;
             this.page = page;
-            this.last = last;
+            this.booleanVar = booleanVar;
+            this.stringVar = stringVar;
         }
     }
 }
