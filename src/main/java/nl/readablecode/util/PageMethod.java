@@ -1,5 +1,8 @@
 package nl.readablecode.util;
 
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -10,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.zkoss.zk.ui.Page;
 
 import static java.util.Arrays.asList;
 
@@ -31,27 +36,51 @@ public class PageMethod {
         return string.replaceAll("//", "/").replaceAll("^([^/]?)", "/$1").replaceFirst("(.)/$", "$1");
     }
 
-    public boolean matches(String candidatePath) {
-        return matches(split(normalize(candidatePath)));
+    public boolean matches(String requestPath) {
+        return matches(split(normalize(requestPath)));
     }
 
-    public boolean matches(List<String> candidateElements) {
-        if (pathElements.size() != candidateElements.size()) {
+    public void invoke(Object instance, String requestPath, Page page) {
+        Map<String, String> values = getValuesByPathVariableName(split(normalize(requestPath)));
+        Map<Integer, String> names = getPathVariableNamesByParameterIndex();
+        Map<Integer, String> valuesByIndex = names.entrySet().stream().map(e -> Pair.of(e.getKey(), values.get(e.getValue())))
+            .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+    }
+
+    private boolean matches(List<String> requestPathElements) {
+        if (pathElements.size() != requestPathElements.size()) {
             return false;
         } else {
-            Iterator<String> iterator = candidateElements.iterator();
-            return pathElements.stream().allMatch(e -> e.equals(iterator.next()) || isPlaceholder(e));
+            Iterator<String> iterator = requestPathElements.iterator();
+            return pathElements.stream().allMatch(e -> e.equals(iterator.next()) || isPathVariable(e));
         }
     }
 
-    public Map<String, String> getValues(List<String> candidateElements) {
-        Iterator<String> iterator = candidateElements.iterator();
+    public Map<String, String> getValuesByPathVariableName(List<String> requestPathElements) {
+        Iterator<String> iterator = requestPathElements.iterator();
         return pathElements.stream().map(e -> Pair.of(e, iterator.next()))
-                                    .filter(p -> isPlaceholder(p.getKey()))
-                                    .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+                                    .filter(pair -> isPathVariable(pair.getKey()))
+                                    .collect(Collectors.toMap(pair -> getVariableName(pair.getKey()), Pair::getValue));
     }
 
-    private boolean isPlaceholder(String pathElement) {
+    public Map<Integer, String> getPathVariableNamesByParameterIndex() {
+        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        return IntStream.range(0, parameterAnnotations.length)
+                    .mapToObj(index -> Pair.of(index, findAnnotation(parameterAnnotations[index], PathVariable.class)))
+                    .filter(pair -> pair.getValue() != null)
+                    .collect(Collectors.toMap(Pair::getKey, pair -> pair.getValue().value()));
+    }
+
+    private <A extends Annotation> A findAnnotation(Annotation[] annotations, Class<A> annotationClass) {
+        return Arrays.stream(annotations).filter(a -> annotationClass.isAssignableFrom(a.getClass()))
+                                         .findFirst().map(a -> annotationClass.cast(a)).orElse(null);
+    }
+
+    private boolean isPathVariable(String pathElement) {
         return pathElement.matches("\\{.*\\}");
+    }
+
+    private String getVariableName(String pathVariable) {
+        return pathVariable.replaceFirst("\\{(.*)\\}", "$1");
     }
 }

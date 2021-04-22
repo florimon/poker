@@ -18,6 +18,7 @@
 		<zkspringboot.version>2.3.1</zkspringboot.version>
 		<zk.version>9.5.0.3</zk.version>
 		<lombok.version>1.18.20</lombok.version>
+		<commons-lang.version>3.11</commons-lang.version>
 
 		<resource.delimiter>@</resource.delimiter>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -92,6 +93,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang.version}</version>
 		</dependency>
 
 		<dependency>
