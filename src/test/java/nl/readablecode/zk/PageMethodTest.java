@@ -45,22 +45,6 @@ public class PageMethodTest {
         assertEquals(true, testInstance.booleanVar);
     }
 
-    @Test
-    public void testIt() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-
-        class Bla {
-            public void bla(Integer a, int b) {
-                System.out.println("a = " + a + ", b = " + b);
-            }
-        }
-
-        Method[] methods = Bla.class.getMethods();
-
-        Method bla = Bla.class.getMethod("bla", Integer.class, int.class);
-        bla.invoke(new Bla(), null, Integer.valueOf(2));
-    }
-
-
     private Method getServiceMethod() throws NoSuchMethodException {
         return TestClass.class.getMethod("service", Long.class, Page.class, Boolean.class, String.class);
     }
