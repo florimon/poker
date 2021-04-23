@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Scope(value = ZkScopesConfigurer.PAGE_SCOPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = ZkScopesConfigurer.PAGE, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public @interface PageScope {
 }

@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Scope(value = ZkScopesConfigurer.DESKTOP_SCOPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = ZkScopesConfigurer.DESKTOP, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public @interface DesktopScope {
 }
