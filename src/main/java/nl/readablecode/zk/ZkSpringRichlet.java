@@ -1,13 +1,5 @@
 package nl.readablecode.zk;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nl.readablecode.util.AnnotationFinder;
@@ -17,13 +9,25 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+
 /**
+ *
  * @author florimon
  */
 @Slf4j
 public class ZkSpringRichlet extends GenericRichlet {
-    private AnnotationFinder annotationFinder = new AnnotationFinder();
-    private List<PageMethod> pageMethods = scanPageMethods();
+    private final AnnotationFinder annotationFinder = new AnnotationFinder();
+    private final List<PageMethod> pageMethods = scanPageMethods();
+    private final SpringBeanLocator springBeanLocator = SpringBeanLocator.getInstance();
+    private final String richletPrefix = springBeanLocator.getRichletMapping().replace("/*", "");
 
     @Override
     public void service(Page page) {
@@ -41,12 +45,12 @@ public class ZkSpringRichlet extends GenericRichlet {
     }
 
     private String getRequestPathWithoutRichletPrefix(Page page) {
-        return page.getRequestPath().replaceFirst(page.getDesktop().getCurrentDirectory(), "/");
+        return page.getRequestPath().replaceFirst(richletPrefix, "/");
     }
 
     private Optional<Boolean> invoke(PageMethod pageMethod, Page page, String pathWithoutPrefix) {
         try {
-            pageMethod.invoke(SpringBeanLocator.getBean(pageMethod.getPageClass()), page, pathWithoutPrefix);
+            pageMethod.invoke(springBeanLocator.getBean(pageMethod.getPageClass()), page, pathWithoutPrefix);
             return Optional.of(true);
         } catch (InvocationTargetException | IllegalAccessException e) {
             log.error("Couldn't invoke bean {} for request path {}", pageMethod.getPageClass(), page.getRequestPath());

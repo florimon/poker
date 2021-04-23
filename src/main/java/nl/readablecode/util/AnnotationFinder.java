@@ -12,6 +12,7 @@ import static java.util.Optional.ofNullable;
 
 /**
  *
+ * @author florimon
  */
 public class AnnotationFinder {
 
@@ -36,15 +37,15 @@ public class AnnotationFinder {
      * @return
      */
     public <A extends Annotation> Optional<Method> findAnnotatedMethod(Class<?> aClass, Class<A> annotation, Method method) {
-        Function<Class<?>, Optional<Method>> getMethod = c -> getMethod(c, method);
-        Function<Method, Boolean> methodPredicate = m -> m.isAnnotationPresent(annotation);
+        Function<Class<?>, Optional<Method>> getMethod = someClass -> getMethod(someClass, method);
+        Function<Method, Boolean> methodPredicate = someMethod -> someMethod.isAnnotationPresent(annotation);
         return ofNullable(walkHierarchy(aClass, c -> getMethod.apply(c).map(methodPredicate).orElse(false)))
                 .flatMap(getMethod);
     }
 
     private Optional<Method> getMethod(Class<?> aClass, Method method) {
         try {
-            return ofNullable(aClass.getMethod(method.getName(), method.getParameterTypes()));
+            return Optional.of(aClass.getMethod(method.getName(), method.getParameterTypes()));
         } catch (NoSuchMethodException e) {
             return Optional.empty();
         }

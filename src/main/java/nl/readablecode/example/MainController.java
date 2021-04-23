@@ -6,7 +6,7 @@ import nl.readablecode.zk.PageMapping;
 import nl.readablecode.zk.scopes.PageScope;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.zkoss.zk.ui.Desktop;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @PageScope
 @PageController
 @EnableScheduling
-public class MainController implements MainInterface {
+public class MainController {
 
     Window window = new Window("MainController Test", "normal", false);
     Label label = new Label();
@@ -31,13 +31,13 @@ public class MainController implements MainInterface {
     Desktop desktop;
     String id;
 
-    @PageMapping("/test")
-    public void service(Page page) {
+    @PageMapping("/test/{name}")
+    public void service(Page page, @PathVariable("name") String name) {
+        log.info("Name = " + name);
         Executions.getCurrent().getParameterMap().forEach((string, object) -> log.info("{} = {}", string, object));
         desktop = page.getDesktop();
         enableServerPush(desktop);
         id = page.getDesktop().getId();
-        log.info("\nIn MainController, instance = {}, desktop = {}\n", this, id);
         page.setTitle("MainController Test");
         new Label("Hello World!").setParent(window);
         label.setParent(window);

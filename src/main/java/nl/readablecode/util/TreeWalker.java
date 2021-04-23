@@ -56,6 +56,7 @@ public class TreeWalker<T> {
         return visitor.test(t) ? t : null;
     }
 
+    @SuppressWarnings("java:S4276") // UnaryOperator<T> not compatible with "traverser.andThen(this::breadthFirst)"
     private Optional<T> findFirst(Collection<T> collection, Function<T,T> matcher) {
         return collection.stream().map(matcher).filter(Objects::nonNull).findFirst();
     }

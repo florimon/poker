@@ -46,7 +46,7 @@ class ZkScope<C, S> implements Scope {
 
     @Override
     public Object get(String name, ObjectFactory<?> objectFactory) {
-        return getScopeMap(getScopeContext()).computeIfAbsent(name, it -> objectFactory.getObject());
+        return getScopeMap(getScopeContext()).computeIfAbsent(name, notUsed -> objectFactory.getObject());
     }
 
     @SuppressWarnings("unchecked")
