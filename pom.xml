@@ -102,11 +102,11 @@
 			<version>${commons-lang.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>nl.readablecode</groupId>
-			<artifactId>misc-utils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>nl.readablecode</groupId>-->
+<!--			<artifactId>misc-utils</artifactId>-->
+<!--			<version>0.0.1-SNAPSHOT</version>-->
+<!--		</dependency>-->
 
         <dependency>
             <groupId>junit</groupId>

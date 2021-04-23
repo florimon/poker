@@ -10,28 +10,26 @@ import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 
+/**
+ *
+ */
 public class AnnotationFinder {
 
-    public <A extends Annotation> Optional<A> getAnnotation(Class<?> aClass, Class<A> annotation) {
+    public <A extends Annotation> Optional<A> findAnnotation(Class<?> aClass, Class<A> annotation) {
         return ofNullable(walkHierarchy(aClass, c -> c.isAnnotationPresent(annotation)))
                 .map(c -> c.getAnnotation(annotation));
     }
 
-    public <A extends Annotation> Optional<Method> getAnnotatedMethod(Class<?> aClass, Class<A> annotation, Method method) {
-        return getAnnotatedMethod(aClass, annotation, method.getName(), method.getParameterTypes());
-    }
-
-    public <A extends Annotation> Optional<Method> getAnnotatedMethod(Class<?> aClass, Class<A> annotation,
-                                                                        String methodName, Class<?>... args) {
-        Function<Class<?>, Optional<Method>> getMethod = c -> getMethod(c, methodName, args);
+    public <A extends Annotation> Optional<Method> findAnnotatedMethod(Class<?> aClass, Class<A> annotation, Method method) {
+        Function<Class<?>, Optional<Method>> getMethod = c -> getMethod(c, method);
         Function<Method, Boolean> methodPredicate = m -> m.isAnnotationPresent(annotation);
         return ofNullable(walkHierarchy(aClass, c -> getMethod.apply(c).map(methodPredicate).orElse(false)))
                 .flatMap(getMethod);
     }
 
-    private Optional<Method> getMethod(Class<?> aClass, String name, Class<?>... args) {
+    private Optional<Method> getMethod(Class<?> aClass, Method method) {
         try {
-            return ofNullable(aClass.getMethod(name, args));
+            return ofNullable(aClass.getMethod(method.getName(), method.getParameterTypes()));
         } catch (NoSuchMethodException e) {
             return Optional.empty();
         }

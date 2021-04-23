@@ -1,4 +1,4 @@
-package nl.readablecode.example;
+package nl.readablecode.zk;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -7,25 +7,24 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@Component
 @RequiredArgsConstructor
-public class SpringUtil {
+public class ZkSpringUtil {
 
     @Setter
-    private static SpringUtil springUtil;
+    private static ZkSpringUtil zkSpringUtil;
 
     private final ApplicationContext applicationContext;
 
     @PostConstruct
     public void init() {
-        setSpringUtil(this);
+        setZkSpringUtil(this);
     }
 
     public static <T> T getBean(String name) {
-        return (T) springUtil.applicationContext.getBean(name);
+        return (T) zkSpringUtil.applicationContext.getBean(name);
     }
 
     public static <T> T getBean(Class<T> aClass) {
-        return springUtil.applicationContext.getBean(aClass);
+        return zkSpringUtil.applicationContext.getBean(aClass);
     }
 }

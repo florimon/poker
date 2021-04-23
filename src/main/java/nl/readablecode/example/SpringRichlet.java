@@ -3,6 +3,8 @@ package nl.readablecode.example;
 import lombok.extern.slf4j.Slf4j;
 import nl.readablecode.util.AnnotationFinder;
 import nl.readablecode.zk.PageMapping;
+import nl.readablecode.zk.PageMethod;
+import nl.readablecode.zk.ZkSpringUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -26,13 +28,13 @@ public class SpringRichlet extends GenericRichlet {
         scanner.addIncludeFilter(new AnnotationTypeFilter(PageMapping.class, true, true));
         Set<BeanDefinition> definitions = scanner.findCandidateComponents("nl.readablecode");
         definitions.forEach(bd -> {
-            log.info("bean {}", bd.getBeanClassName());
-            Optional<Method> method = annotationFinder.getAnnotatedMethod(getClass(bd.getBeanClassName()), PageMapping.class,
-                                                                            "service", Page.class);
-            log.info("{}", method.get().getAnnotation(PageMapping.class));
+            Class<?> beanClass = getClass(bd.getBeanClassName());
+            Method serviceMethod = getServiceMethod(beanClass, "service", Page.class);
+            Optional<Method> annotatedMethod = annotationFinder.findAnnotatedMethod(beanClass, PageMapping.class, serviceMethod);
+            log.info("{}", annotatedMethod.get().getAnnotation(PageMapping.class));
         });
 
-        SpringUtil.getBean(MainController.class).service(page);
+        ZkSpringUtil.getBean(MainController.class).service(page);
 
         // get all beandefinitions of beans with PageMapping annotation
         //  for each beandefinition, get all of the class's methods with PageMapping annotation AND a single 'Page' method argument
@@ -40,6 +42,14 @@ public class SpringRichlet extends GenericRichlet {
         //  and store along with method reference
 
         // /poker/{team}/{player}
+    }
+
+    private Method getServiceMethod(Class<?> aClass, String methodName, Class<?>... arguments)  {
+        try {
+            return aClass.getMethod(methodName, arguments);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Class<?> getClass(String className) {
@@ -60,13 +70,14 @@ public class SpringRichlet extends GenericRichlet {
 
     private Object processZkController(Class<?> aClass) {
         AnnotationFinder annotationFinder = new AnnotationFinder();
-        Optional<PageMapping> classAnnotation = annotationFinder.getAnnotation(aClass, PageMapping.class);
+        Optional<PageMapping> classAnnotation = annotationFinder.findAnnotation(aClass, PageMapping.class);
         List<Method> methods = getMethodsWithSinglePageParameter(aClass);
         if (!methods.isEmpty()) {
             for (Method method : methods) {
-                Optional<Method> annotatedMethod = annotationFinder.getAnnotatedMethod(aClass, PageMapping.class, method);
+                Optional<Method> annotatedMethod = annotationFinder.findAnnotatedMethod(aClass, PageMapping.class, method);
                 if (annotatedMethod.isPresent()) {
-                    // if annotatedMethod has other non-Page parameters, they must have a PathVariable annotation
+                    return new PageMethod(annotatedMethod.get(), classAnnotation.map(PageMapping::value),
+                                        annotatedMethod.get().getAnnotation(PageMapping.class).value());
                 }
             }
         }

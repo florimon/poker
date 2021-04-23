@@ -1,6 +1,7 @@
 package nl.readablecode.example;
 
 import lombok.extern.slf4j.Slf4j;
+import nl.readablecode.zk.ZkSpringUtil;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
@@ -14,7 +15,7 @@ import org.zkoss.zul.Window;
 @Slf4j
 public class TestRichlet extends GenericRichlet {
 
-    private HelloService helloService = SpringUtil.getBean("helloService");
+    private HelloService helloService = ZkSpringUtil.getBean("helloService");
 
     public void service(Page page) {
 

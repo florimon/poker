@@ -1,12 +1,12 @@
 package nl.readablecode.example;
 
-import nl.readablecode.zk.ZkScopesConfigurer;
+import nl.readablecode.zk.ZkConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import(ZkScopesConfigurer.class)
+@Import(ZkConfiguration.class)
 public class ExampleApplication {
 
     public static void main(String[] args) {
