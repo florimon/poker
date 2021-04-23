@@ -1,6 +1,7 @@
 package nl.readablecode.example;
 
 import lombok.extern.slf4j.Slf4j;
+import nl.readablecode.zk.PageController;
 import nl.readablecode.zk.PageMapping;
 import nl.readablecode.zk.scopes.PageScope;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,10 +18,10 @@ import org.zkoss.zul.Window;
 
 import java.util.UUID;
 
-@EnableScheduling
 @Slf4j
-@Component
 @PageScope
+@PageController
+@EnableScheduling
 public class MainController implements MainInterface {
 
     Window window = new Window("MainController Test", "normal", false);

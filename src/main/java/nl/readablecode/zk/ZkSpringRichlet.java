@@ -56,10 +56,9 @@ public class ZkSpringRichlet extends GenericRichlet {
 
     private List<PageMethod> scanPageMethods() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(PageMapping.class, true, true));
+        scanner.addIncludeFilter(new AnnotationTypeFilter(PageController.class, true, true));
         return scanner.findCandidateComponents("nl.readablecode").stream()
-                .map(BeanDefinition::getBeanClassName)
-                .map(this::getClass)
+                .map(this::getBeanClass)
                 .flatMap(this::createPageMethods)
                 .collect(toList());
     }
@@ -85,7 +84,7 @@ public class ZkSpringRichlet extends GenericRichlet {
     }
 
     @SneakyThrows
-    private Class<?> getClass(String className) {
-        return Class.forName(className);
+    private Class<?> getBeanClass(BeanDefinition beanDefinition) {
+        return Class.forName(beanDefinition.getBeanClassName());
     }
 }

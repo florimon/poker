@@ -1,11 +1,9 @@
 package nl.readablecode.zk;
 
-import lombok.Getter;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
-
-import javax.annotation.PostConstruct;
 
 /**
  *
@@ -13,7 +11,6 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 public class SpringBeanLocator {
 
-    @Getter
     @Setter
     private static SpringBeanLocator instance;
 
@@ -22,10 +19,6 @@ public class SpringBeanLocator {
     @PostConstruct
     public void init() {
         setInstance(this);
-    }
-
-    public static <T> T getBean(String name) {
-        return (T) instance.applicationContext.getBean(name);
     }
 
     public static <T> T getBean(Class<T> aClass) {

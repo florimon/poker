@@ -15,11 +15,26 @@ import static java.util.Optional.ofNullable;
  */
 public class AnnotationFinder {
 
+    /**
+     *
+     * @param aClass
+     * @param annotation
+     * @param <A>
+     * @return
+     */
     public <A extends Annotation> Optional<A> findAnnotation(Class<?> aClass, Class<A> annotation) {
         return ofNullable(walkHierarchy(aClass, c -> c.isAnnotationPresent(annotation)))
                 .map(c -> c.getAnnotation(annotation));
     }
 
+    /**
+     *
+     * @param aClass
+     * @param annotation
+     * @param method
+     * @param <A>
+     * @return
+     */
     public <A extends Annotation> Optional<Method> findAnnotatedMethod(Class<?> aClass, Class<A> annotation, Method method) {
         Function<Class<?>, Optional<Method>> getMethod = c -> getMethod(c, method);
         Function<Method, Boolean> methodPredicate = m -> m.isAnnotationPresent(annotation);

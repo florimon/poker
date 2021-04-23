@@ -18,7 +18,7 @@ public class ZkConfiguration {
     }
 
     @Bean
-    public SpringBeanLocator zkSpringUtil(ApplicationContext applicationContext) {
+    public SpringBeanLocator springBeanLocator(ApplicationContext applicationContext) {
         return new SpringBeanLocator(applicationContext);
     }
 }

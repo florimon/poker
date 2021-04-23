@@ -2,6 +2,6 @@ package nl.readablecode.example;
 
 import nl.readablecode.zk.PageMapping;
 
-@PageMapping("/")
+//@PageMapping("/")
 public interface MainInterface {
 }
