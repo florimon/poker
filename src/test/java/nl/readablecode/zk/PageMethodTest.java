@@ -22,13 +22,13 @@ public class PageMethodTest {
     }
 
     @Test
-    public void matchesShouldOnlyBeTrueForSamePathLengths() {
-        PageMethod pageMethod = new PageMethod(null, of("prefix"), "{first}/middle/{last}");
+    public void matchesShouldOnlyBeTrueForSamePathLengths() throws NoSuchMethodException {
+        PageMethod pageMethod = new PageMethod(getServiceMethod(), of("prefix"), "{long}/{string}/{boolean}");
         assertFalse(pageMethod.matches("/prefix"));
         assertFalse(pageMethod.matches("/prefix/123"));
         assertFalse(pageMethod.matches("/prefix/123/middle"));
-        assertTrue(pageMethod.matches("/prefix/123/middle/456"));
-        assertFalse(pageMethod.matches("/prefix/123/middle/456/789"));
+        assertTrue(pageMethod.matches("/prefix/123/middle/true"));
+        assertFalse(pageMethod.matches("/prefix/123/middle/true/789"));
     }
 
     @Test
