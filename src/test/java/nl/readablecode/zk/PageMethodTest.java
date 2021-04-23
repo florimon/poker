@@ -4,7 +4,9 @@ import static java.util.Optional.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -15,9 +17,9 @@ public class PageMethodTest {
 
     @Test
     public void normalizeShouldStandardizeSlashPlacement() {
-        assertEquals("/", PageMethod.normalize(""));
-        assertEquals("/", PageMethod.normalize("/"));
-        assertEquals("/", PageMethod.normalize("//"));
+        assertEquals("", PageMethod.normalize(""));
+        assertEquals("", PageMethod.normalize("/"));
+        assertEquals("", PageMethod.normalize("//"));
         assertEquals("/path/{suffix}", PageMethod.normalize("//path//{suffix}//"));
     }
 
@@ -36,7 +38,7 @@ public class PageMethodTest {
         PageMethod pageMethod = new PageMethod(getServiceMethod(), of("prefix"), "{long}/{string}/{boolean}");
         TestClass testInstance = new TestClass();
         Page page = Mockito.mock(Page.class);
-        pageMethod.invoke(testInstance, "/prefix/123/middle/true", page);
+        pageMethod.invoke(testInstance, page, "/prefix/123/middle/true");
         assertEquals(page, testInstance.page);
         assertEquals(123L, (long) testInstance.longVar);
         assertEquals("middle", testInstance.stringVar);
@@ -44,17 +46,18 @@ public class PageMethodTest {
     }
 
     @Test
-    public void testIt() throws NoSuchMethodException {
+    public void testIt() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
         class Bla {
-            public void bla(Integer a, int b) {}
+            public void bla(Integer a, int b) {
+                System.out.println("a = " + a + ", b = " + b);
+            }
         }
 
         Method[] methods = Bla.class.getMethods();
 
-        Method a = Bla.class.getMethod("bla", Integer.class, int.class);
-        Class<?>[] parameterTypes = a.getParameterTypes();
-        System.out.println(parameterTypes.length);
+        Method bla = Bla.class.getMethod("bla", Integer.class, int.class);
+        bla.invoke(new Bla(), null, Integer.valueOf(2));
     }
 
 

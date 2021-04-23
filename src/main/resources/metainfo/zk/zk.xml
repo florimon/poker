@@ -2,12 +2,12 @@
     <config-name>poker</config-name>
 
     <richlet>
-        <richlet-name>Test</richlet-name>
-        <richlet-class>nl.readablecode.example.SpringRichlet</richlet-class>
+        <richlet-name>ZkSpringRichlet</richlet-name>
+        <richlet-class>nl.readablecode.zk.ZkSpringRichlet</richlet-class>
     </richlet>
 
     <richlet-mapping>
-        <richlet-name>Test</richlet-name>
-        <url-pattern>/zk/test/*</url-pattern>
+        <richlet-name>ZkSpringRichlet</richlet-name>
+        <url-pattern>/zk/*</url-pattern>
     </richlet-mapping>
 </zk>

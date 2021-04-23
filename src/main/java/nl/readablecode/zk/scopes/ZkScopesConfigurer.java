@@ -1,4 +1,4 @@
-package nl.readablecode.zk;
+package nl.readablecode.zk.scopes;
 
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.zkoss.zk.ui.Desktop;
@@ -21,10 +21,13 @@ public class ZkScopesConfigurer extends CustomScopeConfigurer {
     public ZkScopesConfigurer() {
         addScope(WEBAPP_SCOPE, new ZkScope<>("ZK_SPRING_APP_SCOPE",
                 exec -> exec.getDesktop().getWebApp(), WebApp::getAttribute, WebApp::setAttribute, WebApp::getAppName));
+
         addScope(DESKTOP_SCOPE, new ZkScope<>("ZK_SPRING_DESKTOP_SCOPE",
                 Execution::getDesktop, Desktop::getAttribute, Desktop::setAttribute, Desktop::getId));
+
         addScope(PAGE_SCOPE, new ZkScope<>("ZK_SPRING_PAGE_SCOPE",
                 exec -> ((ExecutionCtrl) exec).getCurrentPage(), Page::getAttribute, Page::setAttribute, Page::getId));
+
         addScope(EXECUTION_SCOPE, new ZkScope<>("ZK_SPRING_EXEC_SCOPE",
                 exec -> exec, Execution::getAttribute, Execution::setAttribute, exec -> null));
     }

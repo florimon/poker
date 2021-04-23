@@ -2,7 +2,7 @@ package nl.readablecode.example;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.readablecode.zk.PageMapping;
-import nl.readablecode.zk.PageScope;
+import nl.readablecode.zk.scopes.PageScope;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class MainController implements MainInterface {
     Desktop desktop;
     String id;
 
-    @PageMapping("/service")
+    @PageMapping("/test")
     public void service(Page page) {
         Executions.getCurrent().getParameterMap().forEach((string, object) -> log.info("{} = {}", string, object));
         desktop = page.getDesktop();

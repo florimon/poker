@@ -16,6 +16,9 @@ import org.zkoss.zk.ui.Page;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
+/**
+ *
+ */
 @Getter
 @RequiredArgsConstructor
 public class PageMethod {
@@ -33,11 +36,24 @@ public class PageMethod {
     }
 
     static String normalize(String s) {
-        return s.replace("//", "/").replaceFirst("^$", "/").replaceFirst("^([^/])", "/$1").replaceFirst("(.)/$", "$1");
+        return s.replace("//", "/").replaceFirst("^/$", "").replaceFirst("^([^/])", "/$1").replaceFirst("(.)/$", "$1");
     }
 
+    /**
+     *
+     * @param requestPath
+     * @return
+     */
     public boolean matches(String requestPath) {
         return matches(split(normalize(requestPath)));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Class<?> getPageClass() {
+        return method.getDeclaringClass();
     }
 
     private boolean matches(List<String> requestPathElements) {
@@ -49,8 +65,15 @@ public class PageMethod {
         }
     }
 
-    public void invoke(Object instance, String requestPath, Page page) throws InvocationTargetException,
-                                                                                IllegalAccessException {
+    /**
+     *
+     * @param instance
+     * @param page
+     * @param requestPath
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public void invoke(Object instance, Page page, String requestPath) throws InvocationTargetException, IllegalAccessException {
         method.invoke(instance, getArguments(page, getValuesByParameterIndex(split(normalize(requestPath)))));
     }
 

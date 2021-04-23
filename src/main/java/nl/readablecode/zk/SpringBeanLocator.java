@@ -1,30 +1,34 @@
 package nl.readablecode.zk;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+/**
+ *
+ */
 @RequiredArgsConstructor
-public class ZkSpringUtil {
+public class SpringBeanLocator {
 
+    @Getter
     @Setter
-    private static ZkSpringUtil zkSpringUtil;
+    private static SpringBeanLocator instance;
 
     private final ApplicationContext applicationContext;
 
     @PostConstruct
     public void init() {
-        setZkSpringUtil(this);
+        setInstance(this);
     }
 
     public static <T> T getBean(String name) {
-        return (T) zkSpringUtil.applicationContext.getBean(name);
+        return (T) instance.applicationContext.getBean(name);
     }
 
     public static <T> T getBean(Class<T> aClass) {
-        return zkSpringUtil.applicationContext.getBean(aClass);
+        return instance.applicationContext.getBean(aClass);
     }
 }
