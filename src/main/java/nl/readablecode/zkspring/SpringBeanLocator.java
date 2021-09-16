@@ -1,4 +1,4 @@
-package nl.readablecode.zk;
+package nl.readablecode.zkspring;
 
 import javax.annotation.PostConstruct;
 

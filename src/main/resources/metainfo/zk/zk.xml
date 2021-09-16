@@ -3,7 +3,7 @@
 
     <richlet>
         <richlet-name>ZkSpringRichlet</richlet-name>
-        <richlet-class>nl.readablecode.zk.ZkSpringRichlet</richlet-class>
+        <richlet-class>nl.readablecode.zkspring.ZkSpringRichlet</richlet-class>
     </richlet>
 
     <richlet-mapping>

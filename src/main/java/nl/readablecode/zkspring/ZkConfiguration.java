@@ -1,6 +1,6 @@
-package nl.readablecode.zk;
+package nl.readablecode.zkspring;
 
-import nl.readablecode.zk.scopes.ZkScopesConfigurer;
+import nl.readablecode.zkspring.scopes.ZkScopesConfigurer;
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

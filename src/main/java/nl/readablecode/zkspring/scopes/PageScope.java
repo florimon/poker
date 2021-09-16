@@ -1,4 +1,4 @@
-package nl.readablecode.zk.scopes;
+package nl.readablecode.zkspring.scopes;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;

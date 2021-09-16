@@ -1,4 +1,4 @@
-package nl.readablecode.util;
+package nl.readablecode.zkspring.util;
 
 import lombok.RequiredArgsConstructor;
 
@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 import static java.util.Optional.ofNullable;
 
 /**
- * Models a generic 'tree walker' that can perform a depth-first or breadth-first 'walk' over a
+ * Models a generic 'tree walker' that can perform a depth-first or breadth-first 'walk' over
  * some generic tree type.
  *
  * @param <T>   the generic type of the nodes of the tree

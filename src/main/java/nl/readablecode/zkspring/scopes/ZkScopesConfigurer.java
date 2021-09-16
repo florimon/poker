@@ -1,4 +1,4 @@
-package nl.readablecode.zk.scopes;
+package nl.readablecode.zkspring.scopes;
 
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.zkoss.zk.ui.*;

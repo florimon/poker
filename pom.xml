@@ -13,20 +13,20 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<springboot.version>2.4.4</springboot.version>
-		<springboot.maven.version>2.4.2</springboot.maven.version>
+		<springboot.version>2.5.4</springboot.version>
+		<springboot.maven.version>2.5.4</springboot.maven.version>
 		<zkspringboot.version>2.3.1</zkspringboot.version>
-		<zk.version>9.5.0.3</zk.version>
+		<zk.version>9.6.0.1</zk.version>
 		<lombok.version>1.18.20</lombok.version>
-		<commons-lang.version>3.11</commons-lang.version>
-		<mockito.version>3.4.4</mockito.version>
+		<commons-lang.version>3.12.0</commons-lang.version>
+		<mockito.version>3.12.4</mockito.version>
 
 		<resource.delimiter>@</resource.delimiter>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<start-class>nl.readablecode.example.ExampleApplication</start-class>
+		<start-class>nl.readablecode.poker.PokerApp</start-class>
 	</properties>
 
 	<repositories>
@@ -69,6 +69,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- ZK dependencies -->

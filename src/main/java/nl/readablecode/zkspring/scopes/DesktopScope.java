@@ -1,4 +1,4 @@
-package nl.readablecode.zk.scopes;
+package nl.readablecode.zkspring.scopes;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Scope(value = ZkScopesConfigurer.WEBAPP, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public @interface WebAppScope {
+@Scope(value = ZkScopesConfigurer.DESKTOP, proxyMode = ScopedProxyMode.TARGET_CLASS)
+public @interface DesktopScope {
 }

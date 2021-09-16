@@ -1,8 +1,8 @@
-package nl.readablecode.zk;
+package nl.readablecode.zkspring;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nl.readablecode.util.AnnotationFinder;
+import nl.readablecode.zkspring.util.AnnotationFinder;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -24,6 +24,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Slf4j
 public class ZkSpringRichlet extends GenericRichlet {
+    private static final String ROOT_PACKAGE = "nl.readablecode";
     private final AnnotationFinder annotationFinder = new AnnotationFinder();
     private final List<PageMethod> pageMethods = scanPageMethods();
     private final SpringBeanLocator springBeanLocator = SpringBeanLocator.getInstance();
@@ -53,7 +54,7 @@ public class ZkSpringRichlet extends GenericRichlet {
             pageMethod.invoke(springBeanLocator.getBean(pageMethod.getPageClass()), page, pathWithoutPrefix);
             return Optional.of(true);
         } catch (InvocationTargetException | IllegalAccessException e) {
-            log.error("Couldn't invoke bean {} for request path {}", pageMethod.getPageClass(), page.getRequestPath());
+            log.error("Couldn't invoke bean {} for request path {}", pageMethod.getPageClass(), page.getRequestPath(), e);
             return Optional.empty();
         }
     }
@@ -61,7 +62,7 @@ public class ZkSpringRichlet extends GenericRichlet {
     private List<PageMethod> scanPageMethods() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(PageController.class, true, true));
-        return scanner.findCandidateComponents("nl.readablecode").stream()
+        return scanner.findCandidateComponents(ROOT_PACKAGE).stream()
                 .map(this::getBeanClass)
                 .flatMap(this::createPageMethods)
                 .collect(toList());

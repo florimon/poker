@@ -1,4 +1,4 @@
-package nl.readablecode.zk.scopes;
+package nl.readablecode.zkspring.scopes;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectFactory;

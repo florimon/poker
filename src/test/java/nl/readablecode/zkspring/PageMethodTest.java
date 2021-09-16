@@ -1,12 +1,10 @@
-package nl.readablecode.zk;
+package nl.readablecode.zkspring;
 
 import static java.util.Optional.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,6 +19,7 @@ public class PageMethodTest {
         assertEquals("", PageMethod.normalize("/"));
         assertEquals("", PageMethod.normalize("//"));
         assertEquals("/path/{suffix}", PageMethod.normalize("//path//{suffix}//"));
+        assertEquals("/path/{suffix}", PageMethod.normalize("path//{suffix}//"));
     }
 
     @Test

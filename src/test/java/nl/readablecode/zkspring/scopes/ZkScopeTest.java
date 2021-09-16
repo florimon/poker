@@ -1,4 +1,4 @@
-package nl.readablecode.zk.scopes;
+package nl.readablecode.zkspring.scopes;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

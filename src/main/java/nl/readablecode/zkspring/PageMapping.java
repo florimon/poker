@@ -1,4 +1,4 @@
-package nl.readablecode.zk;
+package nl.readablecode.zkspring;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,0 +1,57 @@
+<zk xmlns:h="http://www.w3.org/1999/xhtml" xmlns:z="zul" xmlns:n="native" xmlns:x="xhtml" xmlns:c="client">
+    <borderlayout >
+        <north height="50px">
+            <div sclass="header banner">Planning Poker</div>
+        </north>
+        <west width="20%"></west>
+        <center>
+            <div>
+                <vlayout>
+                    <n:table class="names">
+                        <n:tr><n:td>Team/Session Id: </n:td>    <n:td><label id="teamId" /></n:td></n:tr>
+                        <n:tr><n:td>Player name: </n:td>        <n:td><textbox id="playerName" /></n:td></n:tr>
+                        <n:tr><n:td>Story description: </n:td>  <n:td><textbox width="60ch" id="storyTitle" /></n:td></n:tr>
+                    </n:table>
+                    <button id="estimate" label="Estimate" />
+                    <grid width="60%">
+                        <columns sizable="true">
+                            <column label="Player" width="80%"/>
+                            <column label="Points"/>
+                        </columns>
+                        <rows id="players"/>
+                    </grid>
+                </vlayout>
+            </div>
+        </center>
+        <east width="20%"></east>
+        <south height="30px">
+            <div sclass="footer banner">(c) Readable Code - readablecode.nl</div>
+        </south>
+    </borderlayout>
+    <style>
+        .z-north-body, .z-south-body {
+            padding: 1px;
+        }
+        .banner {
+            background:#008db7;
+            color:white;
+            text-align: center;
+            height:100%
+        }
+        .header .z-label {
+            font-size: 38px;
+        }
+        .footer .z-label {
+            font-size: 20px;
+        }
+        table.names {
+            font-family: sans-serif;
+        }
+        table.names td {
+            padding: 0.5em;
+        }
+        #${teamId.uuid} {
+            font-weight: bold !important;
+        }
+    </style>
+</zk>

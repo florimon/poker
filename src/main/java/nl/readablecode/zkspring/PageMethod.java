@@ -1,4 +1,4 @@
-package nl.readablecode.zk;
+package nl.readablecode.zkspring;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -9,12 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Method;
-import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.zkoss.zk.ui.Page;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  *
@@ -28,15 +29,41 @@ public class PageMethod {
 
     public PageMethod(Method method, Optional<String> prefix, String path) {
         this(method, split(normalize(prefix.orElse("/")) + normalize(path)),
-                     getPathVariableNamesByParameterIndex(method.getParameterAnnotations()));
+             getPathVariableNamesByParameterIndex(method.getParameterAnnotations()));
     }
 
     private static List<String> split(String path) {
-        return asList(path.split( "/"));
+        return asList(path.split("/"));
     }
 
     static String normalize(String s) {
-        return s.replace("//", "/").replaceFirst("^/$", "").replaceFirst("^([^/])", "/$1").replaceFirst("(.)/$", "$1");
+        return s.replace("//", "/")             // collapse consecutive slashes to a single slash
+                .replaceFirst("^/$", "")        // replace a String consisting of just a slash, with empty String
+                .replaceFirst("^([^/])", "/$1") // prepend a slash if the first character is not a slash
+                .replaceFirst("(.)/$", "$1");   // remove any trailing slash
+    }
+
+    private static Map<Integer, String> getPathVariableNamesByParameterIndex(Annotation[][] parameterAnnotations) {
+        return IntStream.range(0, parameterAnnotations.length)
+                .mapToObj(index -> Pair.of(index, findAnnotation(parameterAnnotations[index], PathVariable.class)))
+                .filter(pair -> pair.getValue() != null)
+                .collect(toMap(Pair::getKey, pair -> pair.getValue().value()));
+    }
+
+    private static <A extends Annotation> A findAnnotation(Annotation[] annotations, Class<A> annotationClass) {
+        return Arrays.stream(annotations)
+                .filter(a -> annotationClass.isAssignableFrom(a.getClass()))
+                .findFirst()
+                .map(annotationClass::cast)
+                .orElse(null);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Class<?> getPageClass() {
+        return method.getDeclaringClass();
     }
 
     /**
@@ -48,20 +75,12 @@ public class PageMethod {
         return matches(split(normalize(requestPath)));
     }
 
-    /**
-     *
-     * @return
-     */
-    public Class<?> getPageClass() {
-        return method.getDeclaringClass();
-    }
-
     private boolean matches(List<String> requestPathElements) {
         if (pathElements.size() != requestPathElements.size()) {
             return false;
         } else {
             Iterator<String> iterator = requestPathElements.iterator();
-            return pathElements.stream().allMatch(e -> e.equals(iterator.next()) || isPathVariable(e));
+            return pathElements.stream().allMatch(pathElement -> pathElement.equals(iterator.next()) || isPathVariable(pathElement));
         }
     }
 
@@ -113,28 +132,16 @@ public class PageMethod {
     }
 
     private Map<Integer, String> getValuesByParameterIndex(Map<Integer, String> names, Map<String, String> values) {
-        return names.entrySet().stream().map(e -> Pair.of(e.getKey(), values.get(e.getValue())))
+        return names.entrySet().stream().map(entry -> Pair.of(entry.getKey(), values.get(entry.getValue())))
                                         .filter(pair -> pair.getValue() != null)
-                                        .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+                                        .collect(toMap(Pair::getKey, Pair::getValue));
     }
 
     public Map<String, String> getValuesByPathVariableName(List<String> requestPathElements) {
         Iterator<String> iterator = requestPathElements.iterator();
-        return pathElements.stream().map(e -> Pair.of(e, iterator.next()))
+        return pathElements.stream().map(pathElement -> Pair.of(pathElement, iterator.next()))
                                     .filter(pair -> isPathVariable(pair.getKey()))
-                                    .collect(Collectors.toMap(pair -> getVariableName(pair.getKey()), Pair::getValue));
-    }
-
-    private static Map<Integer, String> getPathVariableNamesByParameterIndex(Annotation[][] parameterAnnotations) {
-        return IntStream.range(0, parameterAnnotations.length)
-                    .mapToObj(index -> Pair.of(index, findAnnotation(parameterAnnotations[index], PathVariable.class)))
-                    .filter(pair -> pair.getValue() != null)
-                    .collect(Collectors.toMap(Pair::getKey, pair -> pair.getValue().value()));
-    }
-
-    private static <A extends Annotation> A findAnnotation(Annotation[] annotations, Class<A> annotationClass) {
-        return Arrays.stream(annotations).filter(a -> annotationClass.isAssignableFrom(a.getClass()))
-                                         .findFirst().map(annotationClass::cast).orElse(null);
+                                    .collect(toMap(pair -> getVariableName(pair.getKey()), Pair::getValue));
     }
 
     private boolean isPathVariable(String pathElement) {

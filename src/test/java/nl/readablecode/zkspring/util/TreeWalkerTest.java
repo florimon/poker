@@ -1,4 +1,4 @@
-package nl.readablecode.util;
+package nl.readablecode.zkspring.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static nl.readablecode.util.TreeWalkerTest.Node.node;
+import static nl.readablecode.zkspring.util.TreeWalkerTest.Node.node;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
