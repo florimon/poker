@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.zkoss.zkspringboot.ZkAutoConfiguration,\
+org.zkoss.zkspringboot.ZkHomepageConfiguration,\
+org.zkoss.zkspringboot.ZkWebMvcConfiguration

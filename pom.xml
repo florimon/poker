@@ -15,7 +15,6 @@
 		<java.version>1.8</java.version>
 		<springboot.version>2.5.4</springboot.version>
 		<springboot.maven.version>2.5.4</springboot.maven.version>
-		<zkspringboot.version>2.3.1</zkspringboot.version>
 		<zk.version>9.6.0.1</zk.version>
 		<lombok.version>1.18.20</lombok.version>
 		<commons-lang.version>3.12.0</commons-lang.version>
@@ -28,24 +27,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<start-class>nl.readablecode.poker.PokerApp</start-class>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>central</id>
-			<name>Maven Central</name>
-			<url>https://repo1.maven.org/maven2/</url>
-		</repository>
-		<repository>
-			<id>ZK CE</id>
-			<name>ZK CE Repository</name>
-			<url>https://mavensync.zkoss.org/maven2</url>
-		</repository>
-<!--		<repository>-->
-<!--			<id>ZK EVAL</id>-->
-<!--			<name>ZK Evaluation Repository</name>-->
-<!--			<url>https://mavensync.zkoss.org/eval</url>-->
-<!--		</repository>-->
-	</repositories>
 
 	<dependencyManagement>
 		<dependencies>
@@ -77,12 +58,6 @@
 		</dependency>
 
 		<!-- ZK dependencies -->
-		<dependency>
-			<groupId>org.zkoss.zkspringboot</groupId>
-			<artifactId>zkspringboot-autoconfig</artifactId>
-			<version>${zkspringboot.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.zkoss.zk</groupId>
 			<artifactId>zkbind</artifactId>
