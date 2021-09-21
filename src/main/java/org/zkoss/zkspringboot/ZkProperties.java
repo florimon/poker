@@ -9,14 +9,14 @@ public class ZkProperties {
     private String springbootPackaging = "jar";
 
     private String updateUri = "/zkau";
-    private String resourceUri = null;
+    private String resourceUri;
 
-    private String homepage = null;
+    private String homepage;
     private boolean zulViewResolverEnabled = true;
     private String zulViewResolverPrefix = "";
     private String zulViewResolverSuffix = ".zul";
 
-    private String richletFilterMapping = null;
+    private String richletFilterMapping;
 
     public boolean isWar() {
         return "war".equals(getSpringbootPackaging());

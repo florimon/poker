@@ -1,0 +1,7 @@
+<zk>
+	Team/Session name: <textbox id="teamName" />
+	<separator/>
+	Your name: <textbox id="playerName" />
+	<separator/>
+	<button id="joinButton" label="Join" onClick='Executions.sendRedirect("/zk/poker/"+teamName.getValue()+"/" + playerName.getValue())' />
+</zk>
