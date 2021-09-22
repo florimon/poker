@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- This pom is largely derived from the Spring boot pom, without actually using it as the parent pom, -->
-	<!-- so that it's still possible to use whatever parent pom you may already use/be required to use. -->
+	<!-- so that it's still possible to use whatever parent pom you may already use/be required to use. 	-->
 
 	<groupId>nl.readablecode</groupId>
 	<artifactId>poker</artifactId>

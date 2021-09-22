@@ -1,5 +1,6 @@
 package org.zkoss.zkspringboot;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -9,16 +10,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.zkoss.web.util.resource.ClassWebResource;
 
+/**
+ * Configures a view resolver such that for instance "sample" maps to "/zul/sample.zul".
+ */
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 @EnableConfigurationProperties({ZkProperties.class})
 public class ZkWebMvcConfiguration implements WebMvcConfigurer {
-
     private final ZkProperties zkProperties;
-
-    public ZkWebMvcConfiguration(ZkProperties zkProperties) {
-        this.zkProperties = zkProperties;
-    }
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {

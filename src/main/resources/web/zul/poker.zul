@@ -3,29 +3,41 @@
         <north height="50px">
             <div sclass="header banner">Planning Poker</div>
         </north>
-        <west width="20%"></west>
+        <west width="20%"/>
         <center>
             <div>
                 <vlayout>
                     <n:table class="names">
-                        <n:tr><n:td>Team/Session Id: </n:td>    <n:td><label id="teamId" /></n:td></n:tr>
-                        <n:tr><n:td>Player name: </n:td>        <n:td><textbox id="playerName" /></n:td></n:tr>
-                        <n:tr><n:td>Story description: </n:td>  <n:td><textbox width="60ch" id="storyTitle" /></n:td></n:tr>
+                        <n:tr><n:td>Team/Session name: </n:td>      <n:td><label id="teamNameLabel"/></n:td></n:tr>
+                        <n:tr><n:td>Player name: </n:td>            <n:td><textbox id="playerNameInput"/></n:td></n:tr>
+                        <n:tr><n:td>Story description: </n:td>      <n:td><textbox width="60ch" id="storyTitleInput" /></n:td></n:tr>
                     </n:table>
-                    <button id="estimate" label="Estimate" />
-                    <grid width="60%">
+                    <separator height="10px"/>
+                    <div id="voteButtons"/>
+                    <separator height="10px"/>
+                    <hlayout>
+                        <button id="showVotesButton" label="Show votes" />
+                        <separator width="100px"/>
+                        <button id="clearVotesButton" label="Clear votes" />
+                    </hlayout>
+                    <separator height="10px"/>
+                    <grid id="playerGrid" width="60%">
                         <columns sizable="true">
                             <column label="Player" width="80%"/>
                             <column label="Points"/>
                         </columns>
-                        <rows id="players"/>
+                        <rows id="playerRows"/>
                     </grid>
                 </vlayout>
             </div>
         </center>
-        <east width="20%"></east>
-        <south height="30px">
-            <div sclass="footer banner">(c) Readable Code - readablecode.nl</div>
+        <east width="20%"/>
+        <south height="24px">
+            <div sclass="footer banner">
+                (c) Readable Code - readablecode.nl
+                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                (inspired by pointingpoker.com)
+            </div>
         </south>
     </borderlayout>
     <style>
@@ -42,16 +54,32 @@
             font-size: 38px;
         }
         .footer .z-label {
-            font-size: 20px;
+            font-size: 16px;
         }
         table.names {
             font-family: sans-serif;
         }
         table.names td {
-            padding: 0.5em;
+            padding: 0.2em;
+        }
+        #${teamNameLabel.uuid} {
+            font-weight: bold;
         }
         #${teamId.uuid} {
             font-weight: bold !important;
+        }
+        #${playerGrid.uuid} .z-column-content, #${playerRows.uuid} .z-row-content {
+            padding: 6px 8px;
+        }
+        #${playerRows.uuid} .vote.hidden {
+            width: 4em;
+            height: 1.5em;
+            background-color: black;
+            display: block;
+        }
+        #${voteButtons.uuid} button {
+            margin-right: 1em;
+            width: 3.5em;
         }
     </style>
 </zk>

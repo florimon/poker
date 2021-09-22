@@ -1,5 +1,5 @@
 <zk>
-    <config-name>poker</config-name>
+    <config-name>ZkSpring</config-name>
 
     <richlet>
         <richlet-name>ZkSpringRichlet</richlet-name>

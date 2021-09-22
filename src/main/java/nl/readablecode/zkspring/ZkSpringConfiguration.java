@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-public class ZkConfiguration {
+public class ZkSpringConfiguration {
 
     @Bean
     public static CustomScopeConfigurer zkScopesConfigurer() {

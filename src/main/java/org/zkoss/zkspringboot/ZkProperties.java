@@ -12,6 +12,7 @@ public class ZkProperties {
     private String resourceUri;
 
     private String homepage;
+
     private boolean zulViewResolverEnabled = true;
     private String zulViewResolverPrefix = "";
     private String zulViewResolverSuffix = ".zul";

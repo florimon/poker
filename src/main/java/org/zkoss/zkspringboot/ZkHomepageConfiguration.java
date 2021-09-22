@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @ConditionalOnProperty(prefix="zk", name="homepage")
 @EnableConfigurationProperties({ZkProperties.class})
 public class ZkHomepageConfiguration {
-
     private final String homepage;
 
     public ZkHomepageConfiguration(ZkProperties zkProperties) {
