@@ -2,14 +2,24 @@ package nl.readablecode.poker.model;
 
 import lombok.Getter;
 import nl.readablecode.zkspring.ZkHelper;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
-import org.zkoss.zul.*;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Rows;
+import org.zkoss.zul.Textbox;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
-import static java.util.Optional.ofNullable;
-import static nl.readablecode.zkspring.ZkHelper.*;
+import static nl.readablecode.zkspring.ZkHelper.onChange;
+import static nl.readablecode.zkspring.ZkHelper.onClick;
+import static nl.readablecode.zkspring.ZkHelper.onEvents;
+import static nl.readablecode.zkspring.ZkHelper.serverPush;
 
 public class PlayerSession implements PlayerId {
     @Getter
@@ -41,7 +51,7 @@ public class PlayerSession implements PlayerId {
         ZkHelper.enableServerPush(page);
         teamNameLabel.setValue(teamSession.getTeamName());
         playerNameInput.setValue(playerName);
-        onChange(playerNameInput, () -> teamSession.changeName(this));
+        onEvents(playerNameInput, () -> teamSession.changeName(this), Events.ON_CHANGE, Events.ON_OK);
         onChange(storyTitleInput, () -> teamSession.changeTitle(storyTitleInput.getValue()));
         onClick(showVotesButton, teamSession::showVotes);
         onClick(clearVotesButton, teamSession::clearVotes);
