@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static nl.readablecode.zkspring.ZkHelper.onChange;
+import static java.util.Optional.ofNullable;
 import static nl.readablecode.zkspring.ZkHelper.onClick;
 import static nl.readablecode.zkspring.ZkHelper.onEvents;
 import static nl.readablecode.zkspring.ZkHelper.serverPush;
@@ -52,7 +52,7 @@ public class PlayerSession implements PlayerId {
         teamNameLabel.setValue(teamSession.getTeamName());
         playerNameInput.setValue(playerName);
         onEvents(playerNameInput, () -> teamSession.changeName(this), Events.ON_CHANGE, Events.ON_OK);
-        onChange(storyTitleInput, () -> teamSession.changeTitle(storyTitleInput.getValue()));
+        onEvents(storyTitleInput, () -> teamSession.changeTitle(storyTitleInput.getValue()), Events.ON_CHANGE, Events.ON_OK);
         onClick(showVotesButton, teamSession::showVotes);
         onClick(clearVotesButton, teamSession::clearVotes);
         Arrays.stream(Vote.values()).forEach(this::createVoteButton);
@@ -103,7 +103,7 @@ public class PlayerSession implements PlayerId {
     }
 
     public void onPlayerLeft(PlayerId player) {
-        onUiThread(playerRowsById.remove(player)::detach);
+        onUiThread(() -> ofNullable(playerRowsById.remove(player)).ifPresent(PlayerRow::detach));
     }
 
     public void onNameChanged(PlayerId playerId) {
