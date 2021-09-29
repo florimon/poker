@@ -10,7 +10,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 /**
- * Experimental ContextLoaderListener to load a spring boot application context using ZATS' embedded jetty
+ * Experimental ContextLoaderListener to load a spring boot application context using ZATS' embedded jetty.
+ * This is an adaptation, the original is at
+ * https://github.com/zkoss/zkspringboot/blob/master/zkspringboot-autoconfig/src/main/java/org/zkoss/zkspringboot/zats/ZatsSpringBootContextLoaderListener.java
  */
 public class ZatsSpringBootContextLoaderListener extends ContextLoaderListener {
     public static final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";

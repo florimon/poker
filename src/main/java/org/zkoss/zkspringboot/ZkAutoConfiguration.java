@@ -25,6 +25,11 @@ import java.util.Collections;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
 
+/**
+ * This is an adaptation, the original is at
+ * https://github.com/zkoss/zkspringboot/blob/master/zkspringboot-autoconfig/src/main/java/org/zkoss/zkspringboot/ZkWebMvcConfiguration.java
+ *
+ */
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({ZkProperties.class})

@@ -12,6 +12,8 @@ import org.zkoss.web.util.resource.ClassWebResource;
 
 /**
  * Configures a view resolver such that for instance "sample" maps to "/zul/sample.zul".
+ * This is an adapation, the original is at
+ * https://github.com/zkoss/zkspringboot/blob/master/zkspringboot-autoconfig/src/main/java/org/zkoss/zkspringboot/ZkWebMvcConfiguration.java
  */
 @Slf4j
 @Configuration

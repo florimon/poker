@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * This is an adaptation, the original is at
+ * https://github.com/zkoss/zkspringboot/blob/master/zkspringboot-autoconfig/src/main/java/org/zkoss/zkspringboot/ZkHomepageConfiguration.java
+ */
 @Slf4j
 @Controller
 @Configuration
