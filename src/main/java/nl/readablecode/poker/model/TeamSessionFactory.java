@@ -23,6 +23,6 @@ public class TeamSessionFactory {
 
     @Scheduled(fixedRate = 2000)
     public void checkLiveness() {
-        teamSessions.values().forEach(TeamSession::checkLiveness);
+        teamSessions.values().forEach(TeamSession::removeAbandonedPlayerSessions);
     }
 }

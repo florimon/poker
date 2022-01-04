@@ -128,21 +128,19 @@ public class PlayerSession implements PlayerId {
         });
     }
 
-    public void checkLiveness() {
-        if (page == null || !page.isAlive()) {
-            destroy();
-        }
-    }
-
     private void onUiThread(Runnable runnable) {
-        if (page != null && page.isAlive()) {
+        if (isLive()) {
             serverPush(page, runnable);
         } else {
             destroy();
         }
     }
 
-    private void destroy() {
+    public boolean isLive() {
+        return page != null && page.isAlive();
+    }
+
+    void destroy() {
         if (teamSession != null) {
             teamSession.leave(this);
         }

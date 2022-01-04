@@ -3,10 +3,16 @@ package nl.readablecode.poker.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
-import static java.util.Collections.*;
+import static java.util.Collections.synchronizedMap;
+import static java.util.Collections.synchronizedSet;
+import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 public class TeamSession {
@@ -31,6 +37,7 @@ public class TeamSession {
 
     public void leave(PlayerSession player) {
         players.remove(player);
+        votesByPlayer.remove(player);
         notifyAll(recipient -> recipient.onPlayerLeft(player));
     }
 
@@ -68,7 +75,7 @@ public class TeamSession {
         new HashSet<>(players).stream().filter(player -> player != originator).forEach(notification);
     }
 
-    public void checkLiveness() {
-        players.forEach(PlayerSession::checkLiveness);
+    public void removeAbandonedPlayerSessions() {
+        players.stream().filter(player -> !player.isLive()).collect(toList()).forEach(PlayerSession::destroy);
     }
 }
